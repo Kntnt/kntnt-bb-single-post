@@ -28,7 +28,7 @@ new Plugin();
 final class Plugin {
 
 	public function __construct() {
-	  add_action( 'plugins_loaded', [ $this, 'run' ] );
+	  add_action( 'init', [ $this, 'run' ] );
 	}
 	
 	public function run() {
@@ -40,7 +40,7 @@ final class Plugin {
 		load_plugin_textdomain( 'kntnt-bb-single-post', false, 'languages' );
 
     // Load the module
-    require_once 'module/class-single-post.php';
+    require_once 'module/single-post.php';
 
 	}
 
