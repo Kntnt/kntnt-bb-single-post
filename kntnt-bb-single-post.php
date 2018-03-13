@@ -20,14 +20,27 @@ namespace Kntnt\BB_Single_Post;
 
 defined( 'WPINC' ) || die;
 
+define( 'PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'PLUGIN_URL', plugins_url( '/', __FILE__ ) );
+
 new Plugin();
 
 final class Plugin {
 
 	public function __construct() {
+	  add_action( 'plugins_loaded', [ $this, 'run' ] );
+	}
+	
+	public function run() {
+
+    // Nothing to do if Beaver Builder is not installed and activated.
+    if ( ! class_exists( 'FLBuilder' ) ) return;
 
 		// Setup localization.
 		load_plugin_textdomain( 'kntnt-bb-single-post', false, 'languages' );
+
+    // Load the module
+    require_once 'module/class-single-post.php';
 
 	}
 
