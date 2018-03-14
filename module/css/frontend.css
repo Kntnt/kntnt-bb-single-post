@@ -1,0 +1,130 @@
+/* Image */
+
+.kntnt-bb-single-post img {
+	height: auto !important;
+	width: 100% !important;
+}
+
+
+/* Text */
+
+.kntnt-bb-single-post .text > *:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.kntnt-bb-single-post .text a {
+	text-decoration: none;
+}
+
+
+/* Heading */
+
+.kntnt-bb-single-post h2 {
+	margin: 0 0 10px;
+	padding: 0;
+}
+
+
+/* Post information */
+
+.kntnt-bb-single-post .info {
+	font-size: 14px;
+	padding-bottom: 10px;
+}
+
+.kntnt-bb-single-post .info-sep {
+	display: inline-block;
+	margin: 0 2px;
+}
+
+
+/* Content */
+
+.kntnt-bb-single-post .content p:last-of-type {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+
+/* Read more link */
+
+.kntnt-bb-single-post .more-link {
+	margin-top: 10px;
+	display: inline-block;
+}
+
+
+/* Specific for image above-title and above */
+
+.kntnt-bb-single-post-image-title .text,
+.kntnt-bb-single-post-image-above-title .text {
+	padding: 20px;
+}
+
+.kntnt-bb-single-post-image-above .text,
+.kntnt-bb-single-post-image-above .text p,
+.kntnt-bb-single-post-image-above-title .text,
+.kntnt-bb-single-post-image-above-title .text p {
+	font-size: 14px;
+	line-height: 22px;
+}
+
+.kntnt-bb-single-post-image-above h2,
+.kntnt-bb-single-post-image-above-title h2 {
+	font-size: 20px;
+	line-height: 26px;
+}
+
+
+/* Specific for image beside and beside-right */
+
+.kntnt-bb-single-post-image-beside .image,
+.kntnt-bb-single-post-image-beside-right .image {
+	width: 33%;
+	margin-bottom: 0;
+}
+
+.kntnt-bb-single-post-image-beside .image {
+	float: left;
+}
+
+.kntnt-bb-single-post-image-beside-right .image {
+	float: right;
+}
+
+.kntnt-bb-single-post-image-beside .text {
+	margin-left: 37%;
+}
+
+.kntnt-bb-single-post-image-beside-right .text {
+	margin-right: 37%;
+}
+
+.kntnt-bb-single-post-image-beside .header,
+.kntnt-bb-single-post-image-beside-right .header {
+	margin-bottom: 20px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.kntnt-bb-single-post-image-beside h2,
+.kntnt-bb-single-post-image-beside-right h2 {
+	margin: 0 0 10px;
+	padding: 0;
+}
+
+.kntnt-bb-single-post-image-beside .info,
+.kntnt-bb-single-post-image-beside-right .info {
+	padding-bottom: 0;
+	margin-bottom: 5px;
+}
+
+.kntnt-bb-single-post-image-beside .info-sep,
+.kntnt-bb-single-post-image-beside-right .info-sep {
+	margin: 0 3px;
+}
+
+.kntnt-bb-single-post .more-link {
+	margin-top: 15px;
+}

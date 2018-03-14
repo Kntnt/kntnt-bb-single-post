@@ -4,10 +4,6 @@ namespace Kntnt\BB_Single_Post;
 
 class Module extends \FLBuilderModule {
 
-  private $link_href = null;
-
-  private $link_title_attr = null;
-
   public function __construct() {
     parent::__construct( [
       'name'            => __( 'Single Post', 'kntnt-bb-single-post' ),
@@ -20,44 +16,72 @@ class Module extends \FLBuilderModule {
       'editor_export'   => true,
       'enabled'         => true,
       'partial_refresh' => true,
-    ] );
+    ] );    
   }
   
-  public static function sanitize_post_id($pid) {
-    return get_post_status ( $pid ) === 'publish' ? $pid : '';
+  public static function sanitize_post_id( $pid ) {
+    return get_post_status( $pid ) === 'publish' ? $pid : '';
   }
   
-  public function layout() {
-    return $this->settings->show_image ? $this->settings->image_position : 'none';
+  public function frontend_html_variables() {
+
+    $image = get_the_post_thumbnail( $this->settings->pid, $this->settings->image_size );
+    $layout = ( $image && $this->settings->show_image ) ? $this->settings->image_position : 'none';
+
+    return [
+      'pid' =>            $this->settings->pid,
+      'layout' =>         $layout,
+      'link' =>           esc_url( apply_filters( 'the_permalink', get_permalink( $this->settings->pid ), $this->settings->pid ) ),
+      'title' =>          $this->link_title_attr = esc_attr( strip_tags( get_the_title( $this->settings->pid ) ) ),
+      'image' =>          $image,
+      'heading' =>        get_the_title( $this->settings->pid ),
+      'info' =>           $this->info(),
+      'content' =>        $this->content(),
+      'more_link_text' => $this->settings->show_more_link ? $this->settings->more_link_text : '',
+      'icon_position' =>  ( $this->settings->has_icon && 'yes' === $this->settings->has_icon ) ? $this->settings->icon_position : '',
+      'icon' =>           $this->settings->icon,
+    ];
+
+  }
+
+  public function frontend_css_variables() {
+
+    $image = get_the_post_thumbnail( $this->settings->pid, $this->settings->image_size );
+    $layout = ( $image && $this->settings->show_image ) ? $this->settings->image_position : 'none';
+
+    return [
+      'fl_node_id' =>         ".fl-node-$this->node",
+      'layout' =>              $layout,
+      'bg_color'  =>           $this->settings->bg_color,
+      'bg_color_rgba' =>       $this->rgba( $this->settings->bg_color, $this->settings->bg_opacity ),
+      'border_type'=>          $this->settings->border_type,
+      'border_color' =>        $this->settings->border_color,
+      'border_size' =>         $this->settings->border_size,
+      'post_align' =>          $this->settings->post_align,
+      'title_color' =>         $this->settings->title_color,
+      'title_font_size' =>     $this->settings->title_font_size,
+      'info_color' =>          $this->settings->info_color,
+      'info_font_size' =>      $this->settings->info_font_size,
+      'post_padding' =>        $this->settings->post_padding,
+      'content_color' =>       $this->settings->content_color,
+      'content_font_size' =>   $this->settings->content_font_size,
+      'link_color' =>          $this->settings->link_color,
+      'link_hover_color' =>    $this->settings->link_hover_color,
+      'image_width' =>         $this->settings->image_width,
+      'image_spacing' =>       ( $this->settings->show_image && $this->settings->image_spacing ) ? $this->settings->image_spacing : '',
+      'image_position' =>      $this->settings->image_position,
+      'image_beside_margin' => $this->settings->image_spacing ? $this->settings->image_width : $this->settings->image_width + 4,
+      'text_bg_color' =>       $this->settings->text_bg_color ? $this->settings->text_bg_color : 'ffffff',
+      'text_bg_color_rgba' =>  $this->rgba( $this->settings->text_bg_color, $this->settings->text_bg_opacity ),
+      'icon_position' =>       ( $this->settings->has_icon && 'yes' === $this->settings->has_icon ) ? $this->settings->icon_position : '',
+      'icon_color' =>          $this->settings->icon_color,
+      'icon_size' =>           $this->settings->icon_size,
+      'hover_transition' =>    $this->settings->hover_transition,
+    ];
+
   }
   
-  public function render_image_before_heading() {
-    if ( in_array( $this->layout(), [ 'above-title', 'beside', 'underneath' ] ) ) $this->render_image();
-  }
-
-  public function render_image_before_content() {
-    if ( in_array( $this->layout(), [ 'above', 'beside-content' ] ) ) $this->render_image();
-  }
-
-  public function render_image_after_content() {
-    if ( in_array( $this->layout(), [ 'beside-right', 'beside-content-right' ] ) ) $this->render_image();
-  }
-  
-  public function render_image() {
-    $link = $this->link_href();
-    $title = $this->link_title_attr();
-    $img = get_the_post_thumbnail( $this->settings->pid, $this->settings->image_size );
-    include $this->dir . 'includes/featured-image.php';
-  }
-
-  public function render_heading() {
-    $link = $this->link_href();
-    $title = $this->link_title_attr();
-    $heading = get_the_title( $this->settings->pid );
-    include $this->dir . 'includes/heading.php';
-  }
-
-  public function render_info() {
+  private function info() {
 
     $info = [];
   
@@ -76,46 +100,20 @@ class Module extends \FLBuilderModule {
     if ( $this->settings->show_comments ) {
 		  ob_start();
 		  comments_popup_link( '0 <i class="fa fa-comment"></i>', '1 <i class="fa fa-comment"></i>', '% <i class="fa fa-comment"></i>' );
-		  $comments = ob_get_clean();
+		  $info[] = ob_get_clean();
     }
     
-    if ( $info ) {
-      $info = implode ( $this->settings->info_separator, $info );
-      include $this->dir . 'includes/info.php';
-    }
+    $sep = '<span class="info-sep">' . $this->settings->info_separator . '</span>';
+    return implode ( $sep, $info );
     
   }
 
-  public function render_content() {
+  private function content() {
     if ( ! $this->settings->show_content ) return;
-    $content = 'full' === $this->settings->content_type ? $this->content() : $this->excerpt();
-    include $this->dir . 'includes/content.php';
+    return 'full' === $this->settings->content_type ? $this->get_content() : $this->get_excerpt();
   }  
   
-  public function render_more_link() {
-    if ( ! $this->settings->show_more_link ) return;
-    $link = $this->link_href();
-    $title = $this->link_title_attr();
-    $more_link_text = $this->settings->more_link_text;
-    include $this->dir . 'includes/more-link.php';
-  }
- 
-  
-  private function link_href() {
-    if ( ! $this->link_href ) {
-      $this->link_href = esc_url( apply_filters( 'the_permalink', get_permalink( $this->settings->pid ), $this->settings->pid ) );
-    }
-    return $this->link_href;
-  }
-
-  private function link_title_attr() {
-    if ( ! $this->link_title_attr ) {
-      $this->link_title_attr = esc_attr( strip_tags( get_the_title( $this->settings->pid ) ) );
-    }
-    return $this->link_title_attr;
-  }
-  
-  private function excerpt() {
+  private function get_excerpt() {
 
     if ( $this->settings->content_length > 0 ) {
       $custom_excerpt_length = function() { return $this->settings->content_length; };
@@ -136,7 +134,7 @@ class Module extends \FLBuilderModule {
 
   }
 
-  private function content() {
+  private function get_content() {
 
     $content = get_post($this->settings->pid)->post_content;
     $content = apply_filters('the_content', $content);
@@ -147,6 +145,17 @@ class Module extends \FLBuilderModule {
 		}
 
     return $content;
+
+  }
+
+  private function rgba( $rgb, $opacity ) {
+  
+    $rgb = $rgb ? $rgb : 'ffffff';
+    $opacity = $opacity ? $opacity : '100';
+
+    $color = \FLBuilderColor::hex_to_rgb( $rgb );
+    $color[] = $opacity / 100;
+    return implode ( ',', $color );
 
   }
 

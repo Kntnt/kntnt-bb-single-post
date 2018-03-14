@@ -12,15 +12,21 @@ Install the plugin the [usually way](https://codex.wordpress.org/Managing_Plugin
 
 ## Frequently Asked Questions
 
-### Where is the setting page?
+### Why should I use this module?
 
-There is no setting page.
+Honestly, I don't know. You can accomplish what this module does, and much more, with the *Post Grid* module bundled with Beaver Builder.
+
+### Is it working?
+
+Yes. But of the eight layouts this module handle, CSS is missing for three (the two "beside content" and the "underneath" layouts).
+
+### Will it ever be finnished or maintained?
+
+Probably not. Feel free to contribute-
 
 ### Does it work with Beaver Builder 1?
 
-It is developed for Beaver Builder 2.
-
-I have not taken Beaver Builder 1 into account when I coded, nor have I tested it with Beaver Builder 1.
+Nope. Only Beaver Builder 2.
 
 ### Does it work with PHP 5 or PHP 7?
 
